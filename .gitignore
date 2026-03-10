@@ -208,3 +208,4 @@ __marimo__/
 data/
 main.py
 project rules and workflow.txt
+database/grant_access.sql

@@ -112,6 +112,3 @@ ALTER TABLE "tennis".ranking
 ADD CONSTRAINT fk_ranking_competitor
         FOREIGN KEY (competitor_id)
         REFERENCES "tennis".competitor(competitor_id);
-
-ALTER TABLE "tennis".competitor
-DROP CONSTRAINT fk_ranking_competitor;
