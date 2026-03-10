@@ -1,3 +1,3 @@
 # Final_project
 
-![ERD] (ERD.png)
+![ERD.png](ERD.png)
