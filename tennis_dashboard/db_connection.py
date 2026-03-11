@@ -3,7 +3,7 @@ import os
 import dotenv
 import pandas as pd
 import streamlit as st
-dotenv.load_dotenv(".env")
+dotenv.load_dotenv("../.env")
 
 
 @st.cache_resource
