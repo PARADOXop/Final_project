@@ -21,9 +21,7 @@ COLOR_PALETTE = [
 # MAP
 # -----------------------------------
 
-
 def map(df, location, color, title=None):
-
     fig = px.choropleth(
         df,
         locations=location,
@@ -32,7 +30,6 @@ def map(df, location, color, title=None):
         color_continuous_scale="Blues",
         title=title
     )
-
     st.plotly_chart(fig, use_container_width=True)
 
 
@@ -41,16 +38,49 @@ def map(df, location, color, title=None):
 # -----------------------------------
 
 def bar_chart(df: pd.DataFrame, x: str, y: str, title: str = None):
-
     fig = px.bar(
         df,
         x=x,
         y=y,
         title=title,
-        color=x,
         color_discrete_sequence=COLOR_PALETTE
     )
+    fig.update_layout(
+        xaxis_tickangle=-45,
+        showlegend=False
+    )
+    st.plotly_chart(fig, use_container_width=True)
 
+
+# -----------------------------------
+# HISTOGRAM
+# -----------------------------------
+
+def hist_chart(df: pd.DataFrame, x: str, title: str = None, nbins: int = 20):
+    fig = px.histogram(
+        df,
+        x=x,
+        nbins=nbins,
+        title=title,
+        color_discrete_sequence=COLOR_PALETTE
+    )
+    fig.update_layout(showlegend=False)
+    st.plotly_chart(fig, use_container_width=True)
+
+
+# -----------------------------------
+# SCATTER PLOT
+# -----------------------------------
+
+def scatter_chart(df: pd.DataFrame, x: str, y: str, color: str = None, title: str = None):
+    fig = px.scatter(
+        df,
+        x=x,
+        y=y,
+        color=color,
+        title=title,
+        color_discrete_sequence=COLOR_PALETTE
+    )
     st.plotly_chart(fig, use_container_width=True)
 
 
@@ -59,7 +89,6 @@ def bar_chart(df: pd.DataFrame, x: str, y: str, title: str = None):
 # -----------------------------------
 
 def line_chart(df: pd.DataFrame, x: str, y: str, title: str = None):
-
     fig = px.line(
         df,
         x=x,
@@ -68,7 +97,6 @@ def line_chart(df: pd.DataFrame, x: str, y: str, title: str = None):
         markers=True,
         color_discrete_sequence=COLOR_PALETTE
     )
-
     st.plotly_chart(fig, use_container_width=True)
 
 
@@ -77,7 +105,6 @@ def line_chart(df: pd.DataFrame, x: str, y: str, title: str = None):
 # -----------------------------------
 
 def area_chart(df: pd.DataFrame, x: str, y: str, title: str = None):
-
     fig = px.area(
         df,
         x=x,
@@ -85,7 +112,6 @@ def area_chart(df: pd.DataFrame, x: str, y: str, title: str = None):
         title=title,
         color_discrete_sequence=COLOR_PALETTE
     )
-
     st.plotly_chart(fig, use_container_width=True)
 
 
@@ -94,7 +120,6 @@ def area_chart(df: pd.DataFrame, x: str, y: str, title: str = None):
 # -----------------------------------
 
 def pie_chart(df: pd.DataFrame, names: str, values: str, title: str = None):
-
     fig = px.pie(
         df,
         names=names,
@@ -102,7 +127,6 @@ def pie_chart(df: pd.DataFrame, names: str, values: str, title: str = None):
         title=title,
         color_discrete_sequence=COLOR_PALETTE
     )
-
     st.plotly_chart(fig, use_container_width=True)
 
 
@@ -111,7 +135,6 @@ def pie_chart(df: pd.DataFrame, names: str, values: str, title: str = None):
 # -----------------------------------
 
 def show_table(df: pd.DataFrame):
-
     st.dataframe(df, use_container_width=True)
 
 
@@ -120,7 +143,6 @@ def show_table(df: pd.DataFrame):
 # -----------------------------------
 
 def kpi(title: str, value):
-
     st.metric(label=title, value=value)
 
 
@@ -129,7 +151,6 @@ def kpi(title: str, value):
 # -----------------------------------
 
 def kpi_delta(title: str, value, delta):
-
     st.metric(label=title, value=value, delta=delta)
 
 
@@ -138,8 +159,6 @@ def kpi_delta(title: str, value, delta):
 # -----------------------------------
 
 def kpi_row(metrics: dict):
-
     cols = st.columns(len(metrics))
-
     for col, (label, value) in zip(cols, metrics.items()):
         col.metric(label, value)
