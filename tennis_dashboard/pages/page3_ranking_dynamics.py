@@ -8,7 +8,7 @@ def show():
     filtered_ranking     = st.session_state['filtered_ranking']
     filtered_competition = st.session_state['filtered_competition']
 
-    st.title("Ranking & Competition Dynamics")
+    st.title("📈 Ranking & Competition Dynamics")
     st.caption("Who is rising and falling fast — and how deep does the competition hierarchy go?")
     st.divider()
 

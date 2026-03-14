@@ -1,28 +1,54 @@
 from sqlalchemy import create_engine
 import os
-import dotenv
 import pandas as pd
 import streamlit as st
-dotenv.load_dotenv("../.env")
+from dotenv import load_dotenv
+from pathlib import Path
 
+# ---------------------------------------------------
+# LOAD .env SAFELY
+# ---------------------------------------------------
+
+env_path = Path(__file__).resolve().parents[1] / ".env"
+load_dotenv(env_path)
+
+# ---------------------------------------------------
+# DATABASE ENGINE
+# ---------------------------------------------------
 
 @st.cache_resource
 def get_engine():
 
+    DB_USER = os.getenv("DB_USER")
+    DB_PASSWORD = os.getenv("DB_PASSWORD")
+    DB_HOST = os.getenv("DB_HOST")
+    DB_PORT = os.getenv("DB_PORT", "5432")
+    DB_NAME = os.getenv("DB_NAME")
+
     engine = create_engine(
-        f"postgresql+psycopg2://{os.getenv('DB_USER')}:{os.getenv('DB_PASSWORD')}"
-        f"@{os.getenv('DB_HOST')}:{os.getenv('DB_PORT')}/{os.getenv('DB_NAME')}"
+        f"postgresql+psycopg2://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
     )
 
     return engine
 
-# LOAD TABLES INTO PANDAS
+
+# ---------------------------------------------------
+# LOAD TABLES
+# ---------------------------------------------------
+
 @st.cache_data
 def load_tables():
+
     engine = get_engine()
 
-    tables = ["category","competition","competitor",
-              "complex","ranking","venue"]
+    tables = [
+        "category",
+        "competition",
+        "competitor",
+        "complex",
+        "ranking",
+        "venue"
+    ]
 
     dfs = {
         t: pd.read_sql_query(f"SELECT * FROM tennis.{t}", engine)
