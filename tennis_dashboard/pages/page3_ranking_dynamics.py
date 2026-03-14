@@ -83,5 +83,5 @@ def show():
         barmode='stack'
     )
     fig.update_layout(xaxis_tickangle=-45)
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width='stretch')
     st.caption("💡 Most ATP, WTA, and Challenger competitions are orphaned — meaning parent references are missing, concentrated in elite categories.")

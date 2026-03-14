@@ -77,7 +77,7 @@ def bar_chart(df, x, y, title=None, height=420):
 
     fig = style_chart(fig, height)
 
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width='stretch')
 
 
 # ============================================================
@@ -95,7 +95,7 @@ def hist_chart(df, x, title=None, height=420):
 
     fig = style_chart(fig, height)
 
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width='stretch')
 
 
 # ============================================================
@@ -159,7 +159,7 @@ def scatter_chart(df, x, y, color=None, title=None, height=500):
         )
     )
 
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width='stretch')
 
 
 # ============================================================
@@ -190,7 +190,7 @@ def map(df, location, color, title=None, height=420):
         )
     )
 
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width='stretch')
 
 
 # ============================================================
@@ -198,7 +198,7 @@ def map(df, location, color, title=None, height=420):
 # ============================================================
 
 def show_table(df):
-    st.dataframe(df, use_container_width=True)
+    st.dataframe(df, width='stretch')
 
 
 # ============================================================
