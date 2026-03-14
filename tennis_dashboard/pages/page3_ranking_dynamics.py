@@ -8,7 +8,7 @@ def show():
     filtered_ranking     = st.session_state['filtered_ranking']
     filtered_competition = st.session_state['filtered_competition']
 
-    st.title("Ranking & Competition Dynamics")
+    st.title("📈 Ranking & Competition Dynamics")
     st.caption("Who is rising and falling fast — and how deep does the competition hierarchy go?")
     st.divider()
 
@@ -83,5 +83,5 @@ def show():
         barmode='stack'
     )
     fig.update_layout(xaxis_tickangle=-45)
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width='stretch')
     st.caption("💡 Most ATP, WTA, and Challenger competitions are orphaned — meaning parent references are missing, concentrated in elite categories.")

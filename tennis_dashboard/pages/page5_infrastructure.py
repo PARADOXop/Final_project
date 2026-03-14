@@ -10,7 +10,7 @@ def show():
     complex_df           = st.session_state['complex_df']
     filtered_competition = st.session_state['filtered_competition']
 
-    st.title("Infrastructure")
+    st.title("🏟️ Infrastructure")
     st.caption("How is tennis infrastructure distributed globally — and where are the gaps in competition data?")
     st.divider()
 

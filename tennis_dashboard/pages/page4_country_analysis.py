@@ -4,13 +4,12 @@ import plotly.express as px
 from utils.charts import *
 from utils.formatters import *
 
-
 def show():
-    filtered_ranking    = st.session_state['filtered_ranking']
-    filtered_competitor = st.session_state['filtered_competitor']
-    venue_df            = st.session_state['venue_df']
 
-    st.title("Country Analysis")
+    filtered_ranking = st.session_state['filtered_ranking']
+    venue_df = st.session_state['venue_df']
+
+    st.title("🌍 Country Analysis")
     st.caption("Which nations dominate tennis — and does where you're from determine your elite potential?")
     st.divider()
 
@@ -21,41 +20,29 @@ def show():
     st.subheader("Which countries produce the most top-50 competitors?")
 
     top50 = filtered_ranking[filtered_ranking['rank_position'] <= 50]
-    top50_by_country = top50.groupby('country')['competitor_id'].count().reset_index(name='top50_count')
-    top50_by_country = top50_by_country[top50_by_country['country'] != 'Neutral']
-    top50_by_country = top50_by_country.sort_values('top50_count', ascending=False).head(15)
 
-    bar_chart(top50_by_country, x='country', y='top50_count', title='Top 15 Countries by Top-50 Competitors')
-    st.caption("💡 USA and Czechia dominate the top 50 — together accounting for over 30 of the 50 spots across ATP and WTA tours.")
+    top50_by_country = top50.groupby('country')['competitor_id'].count().reset_index(name='count')
 
-    st.divider()
+    total = filtered_ranking.groupby('country')['competitor_id'].count()
+    elite = top50.groupby('country')['competitor_id'].count()
 
-    # --------------------------------------------------------------------
-    # Q2 — Country dominance index (elite ratio)
-    # --------------------------------------------------------------------
+    elite_df = pd.DataFrame({'total': total, 'top50': elite}).fillna(0).reset_index()
+    elite_df['ratio'] = elite_df['top50'] / elite_df['total'] * 100
 
-    st.subheader("Which countries have the highest elite ratio?")
+    c1, c2 = st.columns(2)
 
-    total_per_country = filtered_ranking.groupby('country')['competitor_id'].count()
-    top50_per_country = top50.groupby('country')['competitor_id'].count()
+    with c1:
+        bar_chart(top50_by_country, 'country', 'count', 'Top Countries by Top50 Players')
+        st.caption("💡 USA and Czechia dominate the top 50 — together accounting for over 30 of the 50 spots across ATP and WTA tours.")
 
-    elite_df = pd.DataFrame({
-        'total': total_per_country,
-        'top50': top50_per_country
-    }).fillna(0).reset_index()
-
-    elite_df['elite_ratio'] = (elite_df['top50'] / elite_df['total'] * 100).round(1)
-    elite_df = elite_df[elite_df['total'] >= 3]  # filter countries with at least 3 competitors
-    elite_df = elite_df[elite_df['country'] != 'Neutral']
-    elite_df = elite_df.sort_values('elite_ratio', ascending=False).head(15)
-
-    bar_chart(elite_df, x='country', y='elite_ratio', title='Country Elite Ratio — % of Competitors in Top 50 (min. 3 competitors)')
-    st.caption("💡 Smaller nations like Denmark and Norway convert a higher % of their competitors into top-50 players — quality over quantity.")
+    with c2:
+        bar_chart(elite_df, 'country', 'ratio', 'Country Elite Ratio — % of Competitors in Top 50')
+        st.caption("💡 Smaller nations like Denmark and Norway convert a higher % of their competitors into top-50 players — quality over quantity.")
 
     st.divider()
 
     # --------------------------------------------------------------------
-    # Q3 — Geographic mismatch: top-50 countries vs venue countries
+    # Q2 — Geographic mismatch: venues vs elite players
     # --------------------------------------------------------------------
 
     st.subheader("Which top-50 countries host no venues — and which venue-rich countries produce no elite players?")

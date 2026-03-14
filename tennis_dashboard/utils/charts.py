@@ -2,42 +2,71 @@ import streamlit as st
 import plotly.express as px
 import pandas as pd
 
-
-# -----------------------------------
+# ============================================================
 # COLOR PALETTE
-# -----------------------------------
+# Used for charts across the dashboard
+# ============================================================
 
 COLOR_PALETTE = [
-    "#1f77b4",  # blue
-    "#ff7f0e",  # orange
-    "#2ca02c",  # green
-    "#d62728",  # red
-    "#9467bd",  # purple
-    "#8c564b",  # brown
+    "#22D3EE",
+    "#38BDF8",
+    "#0EA5E9",
+    "#0284C7",
+    "#0369A1"
 ]
 
 
-# -----------------------------------
-# MAP
-# -----------------------------------
+# ============================================================
+# GLOBAL CHART STYLE
+# Applies consistent styling to all charts
+# ============================================================
 
-def map(df, location, color, title=None):
-    fig = px.choropleth(
-        df,
-        locations=location,
-        locationmode="country names",
-        color=color,
-        color_continuous_scale="Blues",
-        title=title
+def style_chart(fig, height=420):
+
+    fig.update_layout(
+
+        height=height,
+
+        # background colors
+        plot_bgcolor="#0F1C3D",
+        paper_bgcolor="#0F1C3D",
+
+        # font style
+        font=dict(
+            color="#E2E8F0",
+            size=14
+        ),
+
+        # chart margins
+        margin=dict(
+            l=20,
+            r=20,
+            t=40,
+            b=20
+        ),
+
+        # grid styling
+        xaxis=dict(
+            showgrid=True,
+            gridcolor="#1E293B"
+        ),
+
+        yaxis=dict(
+            showgrid=True,
+            gridcolor="#1E293B"
+        )
+
     )
-    st.plotly_chart(fig, use_container_width=True)
+
+    return fig
 
 
-# -----------------------------------
+# ============================================================
 # BAR CHART
-# -----------------------------------
+# ============================================================
 
-def bar_chart(df: pd.DataFrame, x: str, y: str, title: str = None):
+def bar_chart(df, x, y, title=None, height=420):
+
     fig = px.bar(
         df,
         x=x,
@@ -45,120 +74,136 @@ def bar_chart(df: pd.DataFrame, x: str, y: str, title: str = None):
         title=title,
         color_discrete_sequence=COLOR_PALETTE
     )
-    fig.update_layout(
-        xaxis_tickangle=-45,
-        showlegend=False
-    )
-    st.plotly_chart(fig, use_container_width=True)
+
+    fig = style_chart(fig, height)
+
+    st.plotly_chart(fig, width='stretch')
 
 
-# -----------------------------------
+# ============================================================
 # HISTOGRAM
-# -----------------------------------
+# ============================================================
 
-def hist_chart(df: pd.DataFrame, x: str, title: str = None, nbins: int = 20):
+def hist_chart(df, x, title=None, height=420):
+
     fig = px.histogram(
         df,
         x=x,
-        nbins=nbins,
         title=title,
         color_discrete_sequence=COLOR_PALETTE
     )
-    fig.update_layout(showlegend=False)
-    st.plotly_chart(fig, use_container_width=True)
+
+    fig = style_chart(fig, height)
+
+    st.plotly_chart(fig, width='stretch')
 
 
-# -----------------------------------
-# SCATTER PLOT
-# -----------------------------------
+# ============================================================
+# SCATTER CHART
+# Used for relationships between two variables
+# ============================================================
 
-def scatter_chart(df: pd.DataFrame, x: str, y: str, color: str = None, title: str = None):
-    fig = px.scatter(
+def scatter_chart(df, x, y, color=None, title=None, height=500):
+
+    # Build figure depending on whether color column exists
+    if color is not None and color in df.columns:
+
+        fig = px.scatter(
+            df,
+            x=x,
+            y=y,
+            color=color,
+            color_discrete_sequence=px.colors.qualitative.Plotly
+        )
+
+    else:
+
+        fig = px.scatter(
+            df,
+            x=x,
+            y=y,
+            color_discrete_sequence=px.colors.qualitative.Plotly
+        )
+
+    # marker styling
+    fig.update_traces(
+        marker=dict(
+            size=13,
+            opacity=0.9
+        )
+    )
+
+    # layout styling
+    fig.update_layout(
+        height=height,
+        plot_bgcolor="#020B1F",
+        paper_bgcolor="#020B1F",
+        font=dict(color="#E2E8F0"),
+        margin=dict(l=20, r=20, t=20, b=20),
+
+        xaxis=dict(
+            showgrid=True,
+            gridcolor="#1E293B",
+            title=x
+        ),
+
+        yaxis=dict(
+            showgrid=True,
+            gridcolor="#1E293B",
+            title=y
+        ),
+
+        legend=dict(
+            title=color if color else "",
+            font=dict(size=11)
+        )
+    )
+
+    st.plotly_chart(fig, width='stretch')
+
+
+# ============================================================
+# WORLD MAP (CHOROPLETH)
+# Shows geographic distributions
+# ============================================================
+
+def map(df, location, color, title=None, height=420):
+
+    fig = px.choropleth(
         df,
-        x=x,
-        y=y,
+        locations=location,
+        locationmode="country names",
         color=color,
         title=title,
-        color_discrete_sequence=COLOR_PALETTE
+        color_continuous_scale="Blues"
     )
-    st.plotly_chart(fig, use_container_width=True)
 
+    fig.update_layout(
+        height=height,
+        margin=dict(l=0, r=0, t=40, b=0),
+        plot_bgcolor="#E8EAEF",
+        paper_bgcolor="#0F1C3D",
 
-# -----------------------------------
-# LINE CHART
-# -----------------------------------
-
-def line_chart(df: pd.DataFrame, x: str, y: str, title: str = None):
-    fig = px.line(
-        df,
-        x=x,
-        y=y,
-        title=title,
-        markers=True,
-        color_discrete_sequence=COLOR_PALETTE
+        geo=dict(
+            bgcolor="#EFF1F5",
+            projection_scale=1.15
+        )
     )
-    st.plotly_chart(fig, use_container_width=True)
+
+    st.plotly_chart(fig, width='stretch')
 
 
-# -----------------------------------
-# AREA CHART
-# -----------------------------------
+# ============================================================
+# TABLE DISPLAY
+# ============================================================
 
-def area_chart(df: pd.DataFrame, x: str, y: str, title: str = None):
-    fig = px.area(
-        df,
-        x=x,
-        y=y,
-        title=title,
-        color_discrete_sequence=COLOR_PALETTE
-    )
-    st.plotly_chart(fig, use_container_width=True)
+def show_table(df):
+    st.dataframe(df, width='stretch')
 
 
-# -----------------------------------
-# PIE CHART
-# -----------------------------------
+# ============================================================
+# KPI METRIC
+# ============================================================
 
-def pie_chart(df: pd.DataFrame, names: str, values: str, title: str = None):
-    fig = px.pie(
-        df,
-        names=names,
-        values=values,
-        title=title,
-        color_discrete_sequence=COLOR_PALETTE
-    )
-    st.plotly_chart(fig, use_container_width=True)
-
-
-# -----------------------------------
-# DATA TABLE
-# -----------------------------------
-
-def show_table(df: pd.DataFrame):
-    st.dataframe(df, use_container_width=True)
-
-
-# -----------------------------------
-# SINGLE KPI
-# -----------------------------------
-
-def kpi(title: str, value):
+def kpi(title, value):
     st.metric(label=title, value=value)
-
-
-# -----------------------------------
-# KPI WITH DELTA
-# -----------------------------------
-
-def kpi_delta(title: str, value, delta):
-    st.metric(label=title, value=value, delta=delta)
-
-
-# -----------------------------------
-# MULTIPLE KPIs ROW
-# -----------------------------------
-
-def kpi_row(metrics: dict):
-    cols = st.columns(len(metrics))
-    for col, (label, value) in zip(cols, metrics.items()):
-        col.metric(label, value)
