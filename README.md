@@ -90,6 +90,7 @@ etc
 - Python  
 - Streamlit  
 - Pandas / NumPy  
+- Neon Database
 - SQL  
 - Matplotlib / Plotly  
 
