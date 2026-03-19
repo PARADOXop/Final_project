@@ -16,7 +16,7 @@ An end-to-end data analytics pipeline with a Streamlit dashboard for visualizati
 
 ### 1. Clone the repository
 ```bash
-git clone https://github.com/PARADOXop/Final_project
+git clone https://github.com/PARADOXop/Final_project.git
 cd Final_project
 ```
 
