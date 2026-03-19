@@ -53,7 +53,7 @@ streamlit run tennis_dashboard/app.py
 
 ---
 ## Data link
-![Data Link](https://www.kaggle.com/datasets/ravirajkukade/tennis-data)
+[Data Link](https://www.kaggle.com/datasets/ravirajkukade/tennis-data)
 ## 🗄️ Database Design
 
 ![ERD](ERD.png)
